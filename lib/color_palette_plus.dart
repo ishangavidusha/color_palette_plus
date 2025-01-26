@@ -103,29 +103,47 @@ class ColorPalette {
 
 /// A class that holds predefined color palettes.
 class ColorPalettes {
-  /// Creates a monochromatic palette from a base color.
+  /// Creates a monochromatic palette from a base color using perceptually balanced lightness.
   /// 
+  /// [steps] must be at least 2.
   /// Returns a list of colors with varying brightness levels.
   static List<Color> monochromatic(Color baseColor, {int steps = 5}) {
+    if (steps < 2) {
+      throw ArgumentError('Steps must be at least 2');
+    }
+
     final hslColor = HSLColor.fromColor(baseColor);
     return List.generate(steps, (index) {
-      final lightness = (1.0 / (steps - 1)) * index;
+      final t = index / (steps - 1);
+      // Perceptual lightness curve (quadratic ease-in)
+      final lightness = 0.15 + 0.7 * t * t;
       return HSLColor.fromAHSL(
         baseColor.a,
         hslColor.hue,
         hslColor.saturation,
-        lightness,
+        lightness.clamp(0.0, 1.0),
       ).toColor();
     });
   }
 
   /// Creates an analogous color palette from a base color.
   /// 
+  /// [steps] must be at least 1.
+  /// [angle] should be between 0 and 360 degrees.
   /// Returns a list of colors with similar hues.
-  static List<Color> analogous(Color baseColor, {int steps = 3, double angle = 30}) {
+  static List<Color> analogous(
+    Color baseColor, {
+    int steps = 3,
+    double angle = 30,
+  }) {
+    if (steps < 1) {
+      throw ArgumentError('Steps must be at least 1');
+    }
+
     final hslColor = HSLColor.fromColor(baseColor);
     return List.generate(steps, (index) {
-      final hue = (hslColor.hue + (index - (steps - 1) / 2) * angle) % 360;
+      final hueOffset = (index - (steps - 1) / 2) * angle;
+      final hue = (hslColor.hue + hueOffset) % 360;
       return HSLColor.fromAHSL(
         baseColor.a,
         hue,
@@ -135,17 +153,24 @@ class ColorPalettes {
     });
   }
 
-  /// Creates a complementary color palette.
+  /// Creates a complementary color palette with adjusted lightness for better contrast.
   /// 
   /// Returns a list containing the base color and its complement.
   static List<Color> complementary(Color baseColor) {
     final hslColor = HSLColor.fromColor(baseColor);
+    
+    // Adjust complement lightness for better contrast
+    final complementLightness = hslColor.lightness > 0.5 
+        ? hslColor.lightness * 0.8 
+        : hslColor.lightness * 1.2;
+
     final complement = HSLColor.fromAHSL(
       baseColor.a,
       (hslColor.hue + 180) % 360,
       hslColor.saturation,
-      hslColor.lightness,
+      complementLightness.clamp(0.0, 1.0),
     ).toColor();
+
     return [baseColor, complement];
   }
 }
