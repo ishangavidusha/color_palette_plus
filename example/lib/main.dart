@@ -34,8 +34,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final materialSwatch = ColorPalette.generateSwatch(selectedColor);
-    final monochromaticColors = ColorPalettes.monochromatic(selectedColor);
-    final analogousColors = ColorPalettes.analogous(selectedColor);
+    final monochromaticColors = ColorPalettes.monochromatic(selectedColor, steps: 10);
+    final analogousColors = ColorPalettes.analogous(selectedColor, steps: 5, angle: 30);
     final complementaryColors = ColorPalettes.complementary(selectedColor);
 
     return Scaffold(
@@ -147,41 +147,49 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 16),
 
-            // Analogous Palette
-            _PaletteSection(
-              title: 'Analogous Palette',
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: analogousColors
-                    .asMap()
-                    .entries
-                    .map((entry) => _ColorTile(
-                          color: entry.value,
-                          label: 'Color ${entry.key + 1}',
-                        ))
-                    .toList(),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Complementary Colors
-            _PaletteSection(
-              title: 'Complementary Colors',
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _ColorTile(
-                    color: complementaryColors[0],
-                    label: 'Base',
+            Row(
+              children: [
+                // Analogous Palette
+                Expanded(
+                  child: _PaletteSection(
+                    title: 'Analogous Palette',
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: analogousColors
+                          .asMap()
+                          .entries
+                          .map((entry) => _ColorTile(
+                                color: entry.value,
+                                label: 'Color ${entry.key + 1}',
+                              ))
+                          .toList(),
+                    ),
                   ),
-                  _ColorTile(
-                    color: complementaryColors[1],
-                    label: 'Complement',
+                ),
+                const SizedBox(width: 16),
+                
+                // Complementary Colors
+                Expanded(
+                  child: _PaletteSection(
+                    title: 'Complementary Colors',
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _ColorTile(
+                          color: complementaryColors[0],
+                          label: 'Base',
+                        ),
+                        _ColorTile(
+                          color: complementaryColors[1],
+                          label: 'Complement',
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -239,7 +247,7 @@ class _ColorTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final luminance = color.computeLuminance();
     final textColor = luminance > 0.5 ? Colors.black : Colors.white;
-    final width = MediaQuery.of(context).size.width / 3 - 32;
+    final width = 100.0;
     return Container(
       width: width,
       height: width,
