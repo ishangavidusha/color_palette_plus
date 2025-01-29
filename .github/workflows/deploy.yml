@@ -1,5 +1,11 @@
 name: Deploy Flutter Web Demo
 
+# Add permissions for deployment
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 on:
   push:
     branches: [ main ]
