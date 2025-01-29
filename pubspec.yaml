@@ -1,6 +1,6 @@
 name: color_palette_plus
 description: "A powerful and efficient Flutter library for generating color palettes, shades, and color variations."
-version: 1.0.0
+version: 2.0.0
 repository: https://github.com/ishangavidusha/color_palette_plus
 
 environment:
@@ -18,4 +18,4 @@ dev_dependencies:
 
 screenshots:
   - description: "This is a screenshot of the color_palette_plus package."
-    path: "images/example1.png"
+    path: "images/example.png"
