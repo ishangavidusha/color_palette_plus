@@ -22,7 +22,7 @@ A powerful and efficient Flutter library for generating color palettes, shades, 
 ![Image 1](images/example.png)
 
 ## Demo App (Example)
-- [View Demo App]()
+- [View Demo App](https://ishangavidusha.github.io/color_palette_plus/)
 
 ## Installation
 

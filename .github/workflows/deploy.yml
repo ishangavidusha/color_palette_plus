@@ -46,3 +46,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./example/build/web
           force_orphan: true
+          publish_branch: gh-pages
+          enable_jekyll: false
